@@ -3,7 +3,7 @@ package com.powersi.api.pojo;
 import com.powersi.comm.bean.BaseBean;
 /**
  * 系统对外暴露api信息
- * @author dell-pc
+ * @author dell-pcdssd
  *
  */
 public class ApiList  extends BaseBean{
