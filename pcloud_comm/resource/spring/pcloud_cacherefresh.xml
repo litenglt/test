@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                                           http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                                                   http://www.springframework.org/schema/context
+                                                   http://www.springframework.org/schema/context/spring-context-4.1.xsd
+                                                   http://www.springframework.org/schema/jee
+                                                        http://www.springframework.org/schema/jee/spring-jee-4.1.xsd
+                                                        http://www.springframework.org/schema/mvc
+                                                   http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+                                                   http://www.springframework.org/schema/util 
+                                                   http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+	
+ 	<!-- 系统只要使用MQ来接收缓存刷新消息，就必须在web.xml中引用pcloud_cacherefresh.xml -->
+ 	<!-- 用于缓存刷新的MQ消息接收帮助类配置 -->
+ 	<bean id="CacheRefreshGatherHandler" class="com.powersi.pcloud.cache.CacheRefreshGatherHandler">
+ 		<property name="projectNameHandler" ref="projectNameHandler"></property>
+ 		<property name="consumer" ref="consumer_cache_refresh"></property>
+	</bean>
+	<!--用于缓存刷新MQ的消费者配置 -->
+	<bean id="consumer_cache_refresh" class="com.powersi.mq.Consumer_redis">
+ 		<property name="readThread" value="1"></property>
+ 		<property name="memoryDB" ref="memoryDB"></property>
+ 		<property name="asynService" ref="asynService_cache_refresh"></property>
+ 	</bean>
+ 	
+ 	<!--用于缓存刷新MQ的消费者的异步服务配置 -->
+ 	<bean id="asynService_cache_refresh" class="com.powersi.asyn.spring.AsynServiceFactoryBean">   
+  		<property name="maxCacheWork" value="999"></property>
+  		<property name="workThreadNum" value="32"></property>
+   </bean>
+   <!--缓存刷新帮助类 -->
+   <bean id="projectNameHandler" class="com.powersi.pcloud.cache.ProjectNameHandler"></bean>
+</beans>
